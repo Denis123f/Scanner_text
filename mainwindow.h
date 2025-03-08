@@ -25,7 +25,7 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QComboBox>
-
+// #include <math>
 
 class Painter_for_new_widget : public QWidget{
     Q_OBJECT
