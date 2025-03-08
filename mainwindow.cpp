@@ -145,7 +145,11 @@ void Painter_for_new_widget::mouseReleaseEvent(QMouseEvent* real_click){
             rect_test = helps_object(global_out_first_click_X, global_out_first_click_Y, global_first_click_X - global_out_first_click_X, global_first_click_Y-global_out_first_click_Y);
         }
 
-
+        
+        /* 
+        std::abs(global_first_click_X - global_out_first_click_X, global_first_click_Y - global_out_first_click_Y, global_out_first_click_X - global_first_click_X, global_out_first_click_Y - global_first_click_Y)
+        */
+        
         QPixmap screenshot = test->grabWindow(0, rect_test.x(), rect_test.y(), rect_test.width(), rect_test.height());
         tesseract::TessBaseAPI api;
         QImage qimage = screenshot.toImage();
