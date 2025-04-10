@@ -1,8 +1,6 @@
-#include "mainwindow.h"
-//#include "ui_mainwindow->h"
+#include "scanner_text.h"
 
-
-MainWindow::MainWindow(QWidget *parent)
+Scanner_text::Scanner_text(QWidget *parent)
     : QWidget(parent)
 {
 
@@ -37,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
     boxes->setFont(font);
     boxes->addItems(st_list);
 
-    connect(boxes, &QComboBox::currentTextChanged, this, &MainWindow::choice_lang);
+    connect(boxes, &QComboBox::currentTextChanged, this, &Scanner_text::choice_lang);
 
     box_v = new QVBoxLayout(); // Для метки и выбора языка
     box_h = new QHBoxLayout(); // Для двух кнопок
@@ -57,11 +55,13 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 Painter_for_new_widget::Painter_for_new_widget(QWidget *parent)
-    : QWidget(parent){
+    : QWidget(parent)
+{
+
 }
 
 
-void MainWindow::main_function(){
+void Scanner_text::main_function(){
 
     window_supple = new Painter_for_new_widget();
 
@@ -89,7 +89,7 @@ void Painter_for_new_widget::closeEvent(QCloseEvent *){
     this->~Painter_for_new_widget();
 }
 
-void MainWindow::closeEvent(QCloseEvent *){
+void Scanner_text::closeEvent(QCloseEvent *){
     window_supple->close();
     this->close();
 }
@@ -117,7 +117,7 @@ void Painter_for_new_widget::mouseMoveEvent(QMouseEvent * movement_mouse){
     }
 }
 const QRect helps_object(const int& x, const int& y, const int& height,const int& width){
-    return QRect(x, y, height, width);
+    return QRect(x+1, y+1, height-2, width-2);
 }
 
 void Painter_for_new_widget::mouseReleaseEvent(QMouseEvent* real_click){
@@ -145,16 +145,12 @@ void Painter_for_new_widget::mouseReleaseEvent(QMouseEvent* real_click){
             rect_test = helps_object(global_out_first_click_X, global_out_first_click_Y, global_first_click_X - global_out_first_click_X, global_first_click_Y-global_out_first_click_Y);
         }
 
-        
-        /* 
-        std::abs(global_first_click_X - global_out_first_click_X, global_first_click_Y - global_out_first_click_Y, global_out_first_click_X - global_first_click_X, global_out_first_click_Y - global_first_click_Y)
-        */
-        
+
         QPixmap screenshot = test->grabWindow(0, rect_test.x(), rect_test.y(), rect_test.width(), rect_test.height());
         tesseract::TessBaseAPI api;
         QImage qimage = screenshot.toImage();
 
-        int chance_up_power_tesseract = 10;
+        int chance_up_power_tesseract = 12;
         QImage q_scaled_i = qimage.scaled(qimage.width() * chance_up_power_tesseract, qimage.height() * chance_up_power_tesseract, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
         QBuffer buffer;
@@ -195,10 +191,5 @@ void Painter_for_new_widget::paintEvent(QPaintEvent *){
 
     check_paint = false;
     }
-}
-MainWindow::~MainWindow()
-{
-
-    //delete ui;
 }
 
