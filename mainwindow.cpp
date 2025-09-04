@@ -1,4 +1,6 @@
 #include "scanner_text.h"
+//#include "ui_Scanner_text->h"
+
 
 Scanner_text::Scanner_text(QWidget *parent)
     : QWidget(parent)
@@ -57,7 +59,7 @@ Scanner_text::Scanner_text(QWidget *parent)
 Painter_for_new_widget::Painter_for_new_widget(QWidget *parent)
     : QWidget(parent)
 {
-
+    check_paint = false;
 }
 
 
@@ -147,7 +149,6 @@ void Painter_for_new_widget::mouseReleaseEvent(QMouseEvent* real_click){
 
 
         QPixmap screenshot = test->grabWindow(0, rect_test.x(), rect_test.y(), rect_test.width(), rect_test.height());
-        tesseract::TessBaseAPI api;
         QImage qimage = screenshot.toImage();
 
         int chance_up_power_tesseract = 12;
@@ -155,34 +156,26 @@ void Painter_for_new_widget::mouseReleaseEvent(QMouseEvent* real_click){
 
         QBuffer buffer;
         buffer.open(QIODevice::WriteOnly);
-
-
         q_scaled_i.save(&buffer, "BMP");
-
         const unsigned char* imageData = reinterpret_cast<const unsigned char*>(buffer.data().constData());
         size_t imageSize = buffer.size();
-
         Pix* image = pixReadMem(imageData, imageSize);
 
         if(lang == "") lang = "rus";    // По умолчанию будет только русский    !   !   !
-
-
         std::string sat = this->lang.toStdString();
         api.Init(nullptr, sat.c_str());
-
         api.SetImage(image);
-
         result = api.GetUTF8Text();
         txt_dublikate->setText(result);
-        this->close();
 
+        this->close();
         buffer.close();
         buffer.setData(nullptr, 0);
         api.End();
         pixDestroy(&image);
     }
 }
-void Painter_for_new_widget::paintEvent(QPaintEvent *){
+void Painter_for_new_widget::paintEvent(QPaintEvent*){
     if(check_paint){
     QPainter paint(this);
     paint.setOpacity(0.2);
@@ -193,3 +186,13 @@ void Painter_for_new_widget::paintEvent(QPaintEvent *){
     }
 }
 
+void Scanner_text::clear_field(){
+    txt->clear();
+}
+void Scanner_text::button_func(){
+    main_function();
+}
+void Scanner_text::choice_lang(const QString& str){
+    if(str == ""){return;}
+    lang = str;
+}
